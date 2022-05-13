@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.17">
+<meta name="author" content="Paulo Jerônimo, 2022-05-13">
+<title>Ethereum "Hello World" Tutorial</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Ethereum "Hello World" Tutorial</h1>
+<div class="details">
+<span id="author" class="author">Paulo Jerônimo</span><br>
+<span id="email" class="email"><a href="mailto:paulojeronimo@gmail.com">paulojeronimo@gmail.com</a></span><br>
+<span id="author2" class="author">2022-05-13</span><br>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#introduction">1. Introduction</a></li>
+<li><a href="#running-the-final-codes-developed-in-this-tutorial">2. Running the final codes developed in this tutorial &#8230;&#8203;</a></li>
+<li><a href="#verifying-the-software-requirements-to-follow-this-tutorial">3. Verifying the software requirements to follow this tutorial</a></li>
+<li><a href="#truffle-suite-version">4. Truffle Suite version</a>
+<ul class="sectlevel2">
+<li><a href="#recreating-the-node-client-jshelloworldclient-js">4.1. Recreating the node client (<code>js/HelloWorldClient.js</code>)</a>
+<ul class="sectlevel3">
+<li><a href="#downloading-the-existing-code-and-changing-to-its-directory">4.1.1. Downloading the existing code and changing to its directory</a></li>
+<li><a href="#creating-a-new-branch-ftecm221">4.1.2. Creating a new branch (ftecm221)</a></li>
+<li><a href="#removing-and-commiting-the-unnecessary-files">4.1.3. Removing and commiting the unnecessary files</a></li>
+<li><a href="#updating-the-contract-helloworld-sol">4.1.4. Updating the contract (<code>HelloWorld.sol</code>)</a></li>
+<li><a href="#testing-the-contract-in-remix-ide">4.1.5. Testing the contract in Remix IDE</a></li>
+<li><a href="#updating-the-npm-packages">4.1.6. Updating the npm packages</a></li>
+<li><a href="#installing-ganache">4.1.7. Installing Ganache</a></li>
+<li><a href="#commiting-our-contract-and-package-updates">4.1.8. Commiting our contract and package updates</a></li>
+<li><a href="#writing-a-new-code-to-compile-the-contract">4.1.9. Writing a new code to compile the contract</a></li>
+<li><a href="#learning-the-api-and-testing-it-using-the-node-repl">4.1.10. Learning the API and testing it using the node REPL</a>
+<ul class="sectlevel4">
+<li><a href="#testing-the-web3-connection">Testing the web3 connection</a></li>
+<li><a href="#testing-the-web3-accounts">Testing the web3 accounts</a></li>
+<li><a href="#deploying-the-contract">Deploying the contract</a></li>
+<li><a href="#getting-the-message-in-helloworld">Getting the message in <code>helloWorld</code></a></li>
+<li><a href="#setting-a-new-message-in-helloworld">Setting a new message in <code>helloWorld</code></a></li>
+<li><a href="#closing-the-node-repl">Closing the node REPL</a></li>
+</ul>
+</li>
+<li><a href="#putting-it-all-together-in-jshelloworldclient-js">4.1.11. Putting it all together (in <code>js/HelloWorldClient.js</code>)</a>
+<ul class="sectlevel4">
+<li><a href="#getting-a-connection-and-print-the-accounts">Getting a connection and print the accounts</a></li>
+<li><a href="#deploying-the-contract-2">Deploying the contract</a></li>
+<li><a href="#getting-the-contracts-message">Getting the contract&#8217;s message</a></li>
+<li><a href="#setting-the-message-in-contract">Setting the message in contract</a></li>
+</ul>
+</li>
+<li><a href="#doing-the-final-adjustments">4.1.12. Doing the final adjustments</a>
+<ul class="sectlevel4">
+<li><a href="#looking-for-an-existing-contract-and-print-its-message">Looking for an existing contract and print its message</a></li>
+<li><a href="#updating-the-message-for-an-existing-contract">Updating the message for an existing contract</a></li>
+<li><a href="#adding-the-yargs-support">Adding the yargs support</a></li>
+<li><a href="#implementing-the-functions-getmessageat-and-setmessageat">Implementing the functions <code>getMessageAt</code> and <code>setMessageAt</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#using-trufflehdwallet-provider">4.2. Using <code>@truffle/hdwallet-provider</code></a></li>
+<li><a href="#deploy-to-rinkeby">4.3. Deploy to Rinkeby</a></li>
+<li><a href="#accessing-the-contract-through-a-web-client">4.4. Accessing the contract through a web client</a></li>
+</ul>
+</li>
+<li><a href="#hardhat-version">5. Hardhat version</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This tutorial updates the <code>master</code> branch of the project
+<a href="https://github.com/paulojeronimo/ethereum-helloworld" class="bare">https://github.com/paulojeronimo/ethereum-helloworld</a>.</p>
+</div>
+<div class="paragraph">
+<p>That branch was published on Mar 14, 2018 and, at the same time,
+I created <a href="https://www.youtube.com/playlist?list=PL3jVhh9mXmz8KSba2NOENx_8qb58Ws7hr">this YouTube playlist</a> to explain Ethereum
+technologies.
+Please see the videos of that playlist, especially <a href="https://www.youtube.com/watch?v=3ljtt_V6Wx0&amp;list=PL3jVhh9mXmz8KSba2NOENx_8qb58Ws7hr&amp;index=9">video
+9</a>, to know about the technologies used by Ethereum at that moment.</p>
+</div>
+<div class="paragraph">
+<p>Many things changed in these last four (4) years since I wrote the
+<a href="https://github.com/paulojeronimo/ethereum-helloworld">Ethereum "Hello World" application</a>.
+The main goal of such application was to explain the fundamentals of
+some tools used when developing <em>smart contracts</em> for the Ethereum
+Blockchain and, also, create an environment to test it.
+Since so much has changed in that time, it&#8217;s time for an update.</p>
+</div>
+<div class="paragraph">
+<p>Now, in addition to being able to use the <a href="https://trufflesuite.com/">Truffle Suite</a> framework (famous at
+that time), another existing alternative, which I will present in this
+tutorial, is the <a href="https://hardhat.org/">Hardhat</a> framework (we&#8217;ll do some basic comparisons
+about both after explaining them).</p>
+</div>
+<div class="paragraph">
+<p>The main purpose of this tutorial is to update the file
+<a href="https://github.com/paulojeronimo/ethereum-helloworld/blob/master/js/HelloWorldClient.js">js/HelloWorldClient.js</a> so it can run with newer versions of libraries and
+frameworks.
+But, it&#8217;s not just that.
+This tutorial will also explore these libraries in more depth and show
+how they are used in practice to build a web version of this
+application.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s get started by using the <a href="https://github.com/ethereum/web3.js/">web3.js</a> library and the <a href="https://trufflesuite.com/">Truffle Suite</a>
+framework.
+After that, we will focus on using the <a href="https://docs.ethers.io/v5/">ethers.js</a> library and the
+<a href="https://hardhat.org/">Hardhat</a> framework.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-final-codes-developed-in-this-tutorial">2. Running the final codes developed in this tutorial &#8230;&#8203;</h2>
+<div class="sectionbody">
+<div id="running-final-code-1" class="paragraph">
+<p>The final code generated until <a href="#final-code-1">this session</a>, without
+including the Git repository that you will produce by following the next
+steps, is available in <a href="final-code-1.zip">this zip file</a>.
+Let&#8217;s run it, before going further, by typing these command lines:</p>
+</div>
+<div class="paragraph">
+<p>warm up:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ # Extracting the final code:
+$ d=~/tmp/ethereum-helloworld.$(date +%F)/; mkdir -p $d &amp;&amp; cd $d
+$ unzip ~/Downloads/final-code-1.zip
+
+$ # Installing the required packages:
+$ pnpm install
+
+$ # Starting `ganache`:
+$ ganache &amp;&gt; ganache.log &amp;
+
+$ # Getting help
+$ node js/HelloWorldClient.js --help</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="cmd1"></a> cmd1:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ # Creating a `HelloWorld` contract with a default message:
+$ node js/HelloWorldClient.js | tee /tmp/cmd1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="cmd2"></a> cmd2:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ # Store the contract address in a variable and print it:
+$ address=$(awk '/deployed at/{print $5}' /tmp/cmd1); echo $address
+
+$ # Getting the message from an existing `HelloWorld` contract:
+$ node js/HelloWorldClient.js getMessage -a $address</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="cmd3"></a> cmd3:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ # Updating the message on an existing `HelloWorld` contract:
+$ node js/HelloWorldClient.js setMessage -a $address -m 'Hello PJ!'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="cmd4"></a> cmd4:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ # Creating a `HelloWorld` contract and update its message:
+$ node js/HelloWorldClient.js -m 'Hello contract 2'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>cool down:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ # Killing the `ganache` process:
+$ kill %1</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="verifying-the-software-requirements-to-follow-this-tutorial">3. Verifying the software requirements to follow this tutorial</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This tutorial was made to run on <a href="https://ubuntu.com">Ubuntu</a>.
+Until this moment, I only tested it on a real machine running Ubuntu
+22.04 with the following command line tools/versions installed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ echo $BASH_VERSION
+5.1.16(1)-release
+
+$ git --version
+git version 2.34.1
+
+$ # node was installed via `nvm` command (https://github.com/nvm-sh/nvm)
+$ node --version
+v16.15.0
+
+$ npm --version
+8.9.0
+
+$ pnpm --version (https://pnpm.io/)
+7.1.0
+
+$ vim --version | head -1
+VIM - Vi IMproved 8.2 (2019 Dec 12, compiled Apr 18 2022 19:26:30)
+
+$ # package containing the `batcat` command:
+$ dpkg -l bat | grep ^ii
+ii  bat            0.19.0-1     amd64        cat(1) clone with syntax highlighting and git integration
+
+$ # package containing the `tmux` command:
+$ dpkg -l tmux | grep ^ii
+ii  tmux           3.2a-4build1 amd64        terminal multiplexer</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For this tutorial, you will only need these command line tools and a
+browser (I will use <a href="https://www.google.com/chrome/">Google Chrome</a>).
+You will not use any IDE such as <a href="https://code.visualstudio.com">Visual Studio Code</a> here because, for
+this tutorial, it can be considered "a bazooka to kill an ant" 😄.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="truffle-suite-version">4. Truffle Suite version</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="recreating-the-node-client-jshelloworldclient-js">4.1. Recreating the node client (<code>js/HelloWorldClient.js</code>)</h3>
+<div class="sect3">
+<h4 id="downloading-the-existing-code-and-changing-to-its-directory">4.1.1. Downloading the existing code and changing to its directory</h4>
+<div class="listingblock">
+<div class="content">
+<pre>$ repo=https://github.com/paulojeronimo/ethereum-helloworld
+$ mkdir -p ~/tmp &amp;&amp; cd $_; git clone $repo &amp;&amp; cd $(basename $repo)</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="creating-a-new-branch-ftecm221">4.1.2. Creating a new branch (ftecm221)</h4>
+<div class="listingblock">
+<div class="content">
+<pre>$ git checkout -b ftecm221</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="removing-and-commiting-the-unnecessary-files">4.1.3. Removing and commiting the unnecessary files</h4>
+<div class="listingblock">
+<div class="content">
+<pre>$ rm -rf bin config eth_private java yarn.lock README.adoc</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .
+$ git commit -m 'Removed unnecessary files'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the directory structure after this change:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ tree
+.
+|-- contracts
+|   `-- HelloWorld.sol
+|-- js
+|   `-- HelloWorldClient.js
+`-- package.json
+
+2 directories, 3 files</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Remember that our final goal for this entire session is to recreate the
+existing functionalities that exists in js/HelloWorldClient.js.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="updating-the-contract-helloworld-sol">4.1.4. Updating the contract (<code>HelloWorld.sol</code>)</h4>
+<div class="paragraph">
+<p>Edit <a href="https://github.com/paulojeronimo/ethereum-helloworld/blob/master/contracts/HelloWorld.sol">contracts/HelloWorld.sol</a> and update it according to this diff file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/contracts/HelloWorld.sol b/contracts/HelloWorld.sol</span>
+<span class="line comment">index f3d4d31..d25f02b 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/contracts/HelloWorld.sol</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/contracts/HelloWorld.sol</span></span>
+<span class="line change"><span class="change">@@</span> -1,17 +1,14 <span class="change">@@</span></span>
+<span class="line delete"><span class="delete">-</span>pragma solidity ^0.4.0;</span>
+<span class="line insert"><span class="insert">+</span>// SPDX-License-Identifier: MIT</span>
+<span class="line insert"><span class="insert">+</span>pragma solidity &gt;=0.8.0 &lt;0.9.0;</span>
+ 
+ contract HelloWorld {
+<span class="line delete"><span class="delete">-</span>    string message;</span>
+<span class="line delete"><span class="delete">-</span><span class="eyecatcher">    </span></span>
+<span class="line delete"><span class="delete">-</span>    <span class="eyecatcher">function HelloWorld() public</span> {</span>
+<span class="line delete"><span class="delete">-</span>        setMessage(&quot;Hello <span class="eyecatcher">w</span>orld!&quot;);</span>
+<span class="line insert"><span class="insert">+</span>    string <span class="eyecatcher">public </span>message;</span>
+<span class="line insert"><span class="insert">+</span></span>
+<span class="line insert"><span class="insert">+</span>    <span class="eyecatcher">constructor ()</span> {</span>
+<span class="line insert"><span class="insert">+</span>        setMessage(&quot;Hello <span class="eyecatcher">W</span>orld!&quot;);</span>
+     }
+<span class="line delete"><span class="delete">-</span><span class="eyecatcher">    </span></span>
+<span class="line delete"><span class="delete">-</span>    function setMessage(string _message) public {</span>
+<span class="line insert"><span class="insert">+</span></span>
+<span class="line insert"><span class="insert">+</span>    function setMessage(string <span class="eyecatcher">memory </span>_message) public {</span>
+         message = _message;
+     }
+<span class="line delete"><span class="delete">-</span>    </span>
+<span class="line delete"><span class="delete">-</span>    function getMessage() public constant returns (string) {</span>
+<span class="line delete"><span class="delete">-</span>        return message;</span>
+<span class="line delete"><span class="delete">-</span>    }</span>
+ }</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can easily do these changes by copying the content above into a
+file <code>/tmp/1.diff</code> and running the following command:</p>
+</div>
+<div id="git-apply" class="listingblock">
+<div class="content">
+<pre>$ git apply /tmp/1.diff</pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">References: </dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://docs.soliditylang.org/" class="bare">https://docs.soliditylang.org/</a></p>
+</li>
+<li>
+<p><a href="https://spdx.dev/" class="bare">https://spdx.dev/</a></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="testing-the-contract-in-remix-ide">4.1.5. Testing the contract in Remix IDE</h4>
+<div class="paragraph">
+<p>Access the <a href="https://remix.ethereum.org/">Remix IDE</a> and test if the contract compiles successfully.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="updating-the-npm-packages">4.1.6. Updating the npm packages</h4>
+<div class="paragraph">
+<p>Verifiy the <code>npm</code> outdated dependencies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ npm outdated
+Package      Current  Wanted  Latest  Location  Depended by
+ganache-cli  MISSING  6.12.2  6.12.2  -         ethereum-helloworld
+solc         MISSING  0.4.26  0.8.13  -         ethereum-helloworld
+web3         MISSING  0.20.7   1.7.3  -         ethereum-helloworld</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Update the packages <code>solc</code> and <code>web3</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ pnpm add solc@0.8.13 web3@1.7.3</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The latest version of <a href="https://github.com/ethereum/web3.js/">web3.js</a> documentation is here:
+<a href="https://web3js.readthedocs.io/" class="bare">https://web3js.readthedocs.io/</a>.
+Also, here is the latest version of the solc documentation:
+<a href="https://solidity.readthedocs.io" class="bare">https://solidity.readthedocs.io</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="installing-ganache">4.1.7. Installing Ganache</h4>
+<div class="paragraph">
+<p>Remove the package <code>ganache-cli</code> because we&#8217;ll use the new package
+<a href="https://www.npmjs.com/package/ganache">ganache</a> instead.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ pnpm remove ganache-cli</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Install <code>ganache</code> globally (with the latest version):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ pnpm add -g ganache</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="commiting-our-contract-and-package-updates">4.1.8. Commiting our contract and package updates</h4>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .
+$ git commit -m "Updated 'contracts/HelloWorld.sol' and npm packages"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After the changes above, your directory tree should be this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ tree
+.
+|-- contracts
+|   `-- HelloWorld.sol
+|-- js
+|   `-- HelloWorldClient.js
+|-- node_modules
+|   |-- solc -&gt; .pnpm/solc@0.8.13/node_modules/solc
+|   `-- web3 -&gt; .pnpm/web3@1.7.3/node_modules/web3
+|-- package.json
+`-- pnpm-lock.yaml
+
+5 directories, 4 files</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="writing-a-new-code-to-compile-the-contract">4.1.9. Writing a new code to compile the contract</h4>
+<div class="paragraph">
+<p>The first change that we need to note is about the compilation of the
+contract.</p>
+</div>
+<div class="paragraph">
+<p>By using the new <code>solc</code> package the process was changed.
+Previously, the compilation could be done using only these two lines
+presented by output of the <code>batcat</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ batcat -r 17:18 js/HelloWorldClient.js</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/batcat.1.png" alt="batcat.1">
+</div>
+</div>
+<div class="paragraph">
+<p>In order to provide more features and flexibility, the compilation is
+now a little more complex &#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>Create the file <code>js/compile.js</code> with the following content:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const path = require(<span class="string"><span class="delimiter">'</span><span class="content">path</span><span class="delimiter">'</span></span>)
+const fs = require(<span class="string"><span class="delimiter">'</span><span class="content">fs</span><span class="delimiter">'</span></span>)
+const solc = require(<span class="string"><span class="delimiter">'</span><span class="content">solc</span><span class="delimiter">'</span></span>)
+
+const source = fs.readFileSync(
+  path.resolve(__dirname, <span class="string"><span class="delimiter">'</span><span class="content">../contracts</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">HelloWorld.sol</span><span class="delimiter">'</span></span>), <span class="string"><span class="delimiter">'</span><span class="content">utf8</span><span class="delimiter">'</span></span>)
+
+const input = {
+  <span class="key">language</span>: <span class="string"><span class="delimiter">'</span><span class="content">Solidity</span><span class="delimiter">'</span></span>,
+  <span class="key">sources</span>: {
+    <span class="key"><span class="delimiter">'</span><span class="content">HelloWorld.sol</span><span class="delimiter">'</span></span>: {
+      <span class="key">content</span>: source,
+    },
+  },
+  <span class="key">settings</span>: {
+    <span class="key">outputSelection</span>: {
+      <span class="key"><span class="delimiter">'</span><span class="content">*</span><span class="delimiter">'</span></span>: {
+        <span class="key"><span class="delimiter">'</span><span class="content">*</span><span class="delimiter">'</span></span>: [<span class="string"><span class="delimiter">'</span><span class="content">*</span><span class="delimiter">'</span></span>],
+      },
+    },
+  },
+}
+
+module.exports = JSON.parse(
+  solc.compile(JSON.stringify(input))).contracts[<span class="string"><span class="delimiter">'</span><span class="content">HelloWorld.sol</span><span class="delimiter">'</span></span>].HelloWorld</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can use an editor (I use <a href="https://www.vim.org">vim</a>) or copy and paste the code
+above directly into the terminal by putting it just below this command
+line:<br>
+<code>$ cat &gt; js/compile.js &lt;&lt;'EOF'</code><br>
+In this case, you will need to close this command with a line where you
+will write the word <code>EOF</code> (press the key <kbd>Enter</kbd> ather this).
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="learning-the-api-and-testing-it-using-the-node-repl">4.1.10. Learning the API and testing it using the node REPL</h4>
+<div class="paragraph">
+<p>Test the code written in the last session by using
+<a href="https://nodejs.org/api/repl.html">REPL</a>.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, we will compile the contract and present its
+<a href="https://docs.soliditylang.org/en/v0.8.13/abi-spec.html">Abstract Binary Interface (ABI)</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node
+Welcome to Node.js v16.15.0.
+Type ".help" for more information.
+> let helloWorldContract = require('./js/compile')
+undefined
+> helloWorldContract.abi
+[
+  { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
+  {
+    inputs: [],
+    name: 'message',
+    outputs: [ [Object] ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [ [Object] ],
+    name: 'setMessage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  }
+]</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="testing-the-web3-connection">Testing the web3 connection</h5>
+<div class="paragraph">
+<p>On another terminal, start <code>ganache</code></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+I like to use <a href="https://github.com/tmux/tmux">tmux</a> to do this.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ganache</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the opened session for node in the last session, type the following
+commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; let Web3 = require('web3')
+undefined
+&gt; let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+undefined</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that, initially, we are not connected:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; web3.currentProvider.connected
+false</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In order to check if we can get a connection with the current provider
+configured, we can execute this code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; .editor
+// Entering editor mode (Ctrl+D to finish, Ctrl+C to cancel)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Copy the following content do <code>node</code> terminal and, after that, press
+<span class="keyseq"><kbd>Ctrl</kbd>+<kbd>D</kbd></span>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>web3.eth.net.isListening()
+  .then(() =&gt; console.log('web3 is connected!'))
+  .catch((error) =&gt; console.log(error))</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, verify the connection again:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; web3.currentProvider.connected
+true</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="testing-the-web3-accounts">Testing the web3 accounts</h5>
+<div class="paragraph">
+<p>Many functions in web3 returns a <a href="https://web.dev/promises/">JavaScript Promisse</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; web3.eth.getAccounts().then(console.log)
+Promise {
+  &lt;pending&gt;,
+  [Symbol(async_id_symbol)]: 423,
+  [Symbol(trigger_async_id_symbol)]: 418,
+  [Symbol(destroyed)]: { destroyed: false }
+}
+&gt; [
+  '0x5B27B438fD22fEB8be6C7ae6eBeC83cA802dC28b',
+  '0x14cBbE6De85D62014BeCc749032B961842C4f532',
+  '0x08Ec339d8be941Cc024a59356aB25c0C0097b485',
+  '0x195309AB75670aF0e37c0cf89C003F6cf9dFC279',
+  '0x7b06A31127e8cb3431e3dD8d1892F038a3E82bDe',
+  '0x2819967ff90421d5926E4c7BFF4eeD14d551a802',
+  '0x1d3D3ec6a3507Bc0F47e8Ef55Eb94c48888B3A6f',
+  '0xb9997Ace054E3f309d4DDb0F9397aFf8E4c3a0A9',
+  '0x5aE75fBb47C0A16137d30a7f9f47bbf317545D86',
+  '0xbaC64723bB149Aa48173eaEF0c7e2b616B9d7e23'
+]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So we can get its result by using the <code>await</code> keyword, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; let accounts = await web3.eth.getAccounts()
+&gt; accounts</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="deploying-the-contract">Deploying the contract</h5>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; let {abi, evm} = helloWorldContract
+&gt; .editor
+// Entering editor mode (Ctrl+D to finish, Ctrl+C to cancel)</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>let helloWorld = await new web3.eth.Contract(abi)
+  .deploy({data: evm.bytecode.object, arguments: []})
+  .send({from: accounts[0], gas: '1000000'})
+  .on('receipt', console.log)</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">References: </dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://web3js.readthedocs.io/en/v1.7.3/web3-eth-contract.html#deploy" class="bare">https://web3js.readthedocs.io/en/v1.7.3/web3-eth-contract.html#deploy</a></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="getting-the-message-in-helloworld">Getting the message in <code>helloWorld</code></h5>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; await helloWorld.methods.message().call()
+'Hello Ethereum World!'</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="setting-a-new-message-in-helloworld">Setting a new message in <code>helloWorld</code></h5>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; let tx = await helloWorld.methods.setMessage('Hello Paulo Jeronimo!').send({from: accounts[0]})</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; let { transactionHash, gasUsed, blockNumber } = tx
+&gt; console.log(`\tTransaction: ${transactionHash}\n\tGas usage: ${gasUsed}\n\tBlock number: ${blockNumber}`)</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; await helloWorld.methods.message().call()
+'Hello Paulo Jeronimo!'</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="closing-the-node-repl">Closing the node REPL</h5>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; .exit</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can also type <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>D</kbd></span> to close the node REPL.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="putting-it-all-together-in-jshelloworldclient-js">4.1.11. Putting it all together (in <code>js/HelloWorldClient.js</code>)</h4>
+<div class="sect4">
+<h5 id="getting-a-connection-and-print-the-accounts">Getting a connection and print the accounts</h5>
+<div class="paragraph">
+<p>Before starting to join the puzzle, commit the code that we create for
+<code>js/compile.js</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add js/compile.js
+$ git commit -m "Added 'js/compile.js'"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s create our minimal and functional code in order to evolve it.
+Copy the following contents to the file <code>js/HelloWorldClient.js</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const Web3 = require(<span class="string"><span class="delimiter">'</span><span class="content">web3</span><span class="delimiter">'</span></span>);
+const web3 = <span class="keyword">new</span> Web3(<span class="keyword">new</span> Web3.providers.HttpProvider(<span class="string"><span class="delimiter">'</span><span class="content">http://localhost:8545</span><span class="delimiter">'</span></span>))
+
+async <span class="keyword">function</span> <span class="function">afterConnect</span>() {
+  console.log(<span class="error">`</span>web3 is connected!<span class="error">\</span>nweb3.version: <span class="predefined">$</span>{web3.version}<span class="error">`</span>)
+  const accounts = await web3.eth.getAccounts()
+  console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">accounts:</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>, accounts)
+}
+
+web3.eth.net.isListening()
+  .then(() =&gt; afterConnect())
+  .<span class="keyword">catch</span>((error) =&gt; console.log(error))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Test the code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node js/HelloWorldClient.js
+web3 is connected!
+web3.version: 1.7.3
+accounts:
+ [
+  '0x5e79A7bA6298844d5E96fbC0529dbAe338f50e95',
+  '0xd2B3760Bbf721CfBCc01a0BB06AA6BFc0D8d746B',
+  '0xF353D59A44bc9E3Ef3a9f9cab82216BC5fb76AAF',
+  '0x27b53d80f3A3B303fC2f12D8486b742f33B49076',
+  '0xb1B7990B63FC150bf3dD356D4E6F92d8142EDe95',
+  '0x75c12Dc8a595C0d1d2d8935220ce448f26458e5b',
+  '0x59a0205118506c81dEAF4a25270C5094415993F1',
+  '0x410Cfa7EC1Ce2B0d0fb22257F571727de4915e1C',
+  '0xe311B409465A29F90c2620a3D2E64978E29F97ac',
+  '0x097F51fc450d1cDDAA156B88D675ddC137F7EB34'
+]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stage this file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="deploying-the-contract-2">Deploying the contract</h5>
+<div class="paragraph">
+<p>Update the code according to this diff:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/HelloWorldClient.js b/js/HelloWorldClient.js</span>
+<span class="line comment">index b49981b..52a4bbe 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/HelloWorldClient.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/HelloWorldClient.js</span></span>
+<span class="line change"><span class="change">@@</span> -1,10 +1,27 <span class="change">@@</span></span>
+ const Web3 = require(<span class="string"><span class="delimiter">'</span><span class="content">web3</span><span class="delimiter">'</span></span>);
+ const web3 = <span class="keyword">new</span> Web3(<span class="keyword">new</span> Web3.providers.HttpProvider(<span class="string"><span class="delimiter">'</span><span class="content">http://localhost:8545</span><span class="delimiter">'</span></span>))
+<span class="line insert"><span class="insert">+</span>const { abi, evm } = require(<span class="string"><span class="delimiter">'</span><span class="content">./compile</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span></span>
+<span class="line insert"><span class="insert">+</span><span class="keyword">function</span> <span class="function">printTx</span>({transactionHash, gasUsed, blockNumber}) {</span>
+<span class="line insert"><span class="insert">+</span>  console.log(<span class="error">`</span><span class="error">\</span>tTransaction: <span class="predefined">$</span>{transactionHash}<span class="error">\</span>n<span class="error">\</span>tGas usage: <span class="predefined">$</span>{gasUsed}<span class="error">\</span>n<span class="error">\</span>tBlock number: <span class="predefined">$</span>{blockNumber}<span class="error">`</span>)</span>
+<span class="line insert"><span class="insert">+</span>}</span>
+<span class="line insert"><span class="insert">+</span></span>
+<span class="line insert"><span class="insert">+</span>async <span class="keyword">function</span> <span class="function">deploy</span>(accounts) {</span>
+<span class="line insert"><span class="insert">+</span>  console.log(<span class="string"><span class="delimiter">'</span><span class="content">A HelloWorld contract will be deployed</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>  let tx = <span class="predefined-constant">null</span></span>
+<span class="line insert"><span class="insert">+</span>  const helloWorld = await <span class="keyword">new</span> web3.eth.Contract(abi)</span>
+<span class="line insert"><span class="insert">+</span>    .deploy({<span class="key">data</span>: evm.bytecode.object, <span class="local-variable">arguments</span>: []})</span>
+<span class="line insert"><span class="insert">+</span>    .send({<span class="key">from</span>: accounts[<span class="integer">0</span>], <span class="key">gas</span>: <span class="string"><span class="delimiter">'</span><span class="content">1000000</span><span class="delimiter">'</span></span>})</span>
+<span class="line insert"><span class="insert">+</span>    .on(<span class="string"><span class="delimiter">'</span><span class="content">receipt</span><span class="delimiter">'</span></span>, (receipt) =&gt; tx = receipt)</span>
+<span class="line insert"><span class="insert">+</span>  printTx(tx, helloWorld)</span>
+<span class="line insert"><span class="insert">+</span>  console.log(<span class="string"><span class="delimiter">'</span><span class="content">HelloWorld successfully deployed at</span><span class="delimiter">'</span></span>, helloWorld.options.address)</span>
+<span class="line insert"><span class="insert">+</span>  <span class="keyword">return</span> helloWorld</span>
+<span class="line insert"><span class="insert">+</span>}</span>
+ 
+ async <span class="keyword">function</span> <span class="function">afterConnect</span>() {
+   console.log(<span class="error">`</span>web3 is connected!<span class="error">\</span>nweb3.version: <span class="predefined">$</span>{web3.version}<span class="error">`</span>)
+   const accounts = await web3.eth.getAccounts()
+<span class="line delete"><span class="delete">-</span>  cons<span class="eyecatcher">ole.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">accounts:</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>, </span>accounts)</span>
+<span class="line insert"><span class="insert">+</span>  cons<span class="eyecatcher">t helloWorld = await deploy(</span>accounts)</span>
+ }
+ 
+ web3.eth.net.isListening()</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Remember <a href="#git-apply">how to apply a diff using <code>git</code></a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Restart <code>ganache</code>.</p>
+</div>
+<div class="paragraph">
+<p>Test the code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node js/HelloWorldClient.js</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stage this file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="getting-the-contracts-message">Getting the contract&#8217;s message</h5>
+<div class="paragraph">
+<p>Update the code according to this diff:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/HelloWorldClient.js b/js/HelloWorldClient.js</span>
+<span class="line comment">index 52a4bbe..1a6188a 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/HelloWorldClient.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/HelloWorldClient.js</span></span>
+<span class="change"><span class="change">@@</span> -18,10 +18,16 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">deploy</span>(accounts) {
+   <span class="keyword">return</span> helloWorld
+ }
+ 
+<span class="line insert"><span class="insert">+</span>async <span class="keyword">function</span> <span class="function">getMessage</span>(helloWorld) {</span>
+<span class="line insert"><span class="insert">+</span>  const message = await helloWorld.methods.message().call()</span>
+<span class="line insert"><span class="insert">+</span>  console.log(<span class="error">`</span>Message: <span class="predefined">$</span>{message}<span class="error">`</span>)</span>
+<span class="line insert"><span class="insert">+</span>}</span>
+<span class="line insert"><span class="insert">+</span></span>
+ async <span class="keyword">function</span> <span class="function">afterConnect</span>() {
+   console.log(<span class="error">`</span>web3 is connected!<span class="error">\</span>nweb3.version: <span class="predefined">$</span>{web3.version}<span class="error">`</span>)
+   const accounts = await web3.eth.getAccounts()
+   const helloWorld = await deploy(accounts)
+<span class="line insert"><span class="insert">+</span>  await getMessage(helloWorld)</span>
+ }
+ 
+ web3.eth.net.isListening()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Test the code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node js/HelloWorldClient.js</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stage this file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="setting-the-message-in-contract">Setting the message in contract</h5>
+<div class="paragraph">
+<p>Update the code according to this diff:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/HelloWorldClient.js b/js/HelloWorldClient.js</span>
+<span class="line comment">index 1a6188a..03657eb 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/HelloWorldClient.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/HelloWorldClient.js</span></span>
+<span class="change"><span class="change">@@</span> -18,6 +18,14 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">deploy</span>(accounts) {
+   <span class="keyword">return</span> helloWorld
+ }
+ 
+<span class="line insert"><span class="insert">+</span>async <span class="keyword">function</span> <span class="function">setMessage</span>(helloWorld, message, accounts, callback) {</span>
+<span class="line insert"><span class="insert">+</span>  console.log(<span class="error">`</span>Calling setMessage(<span class="string"><span class="delimiter">&quot;</span><span class="content">${message}</span><span class="delimiter">&quot;</span></span>)<span class="error">`</span>)</span>
+<span class="line insert"><span class="insert">+</span>  const tx = await helloWorld.methods.setMessage(message)</span>
+<span class="line insert"><span class="insert">+</span>    .send({<span class="key">from</span>: accounts[<span class="integer">0</span>]})</span>
+<span class="line insert"><span class="insert">+</span>  printTx(tx, helloWorld)</span>
+<span class="line insert"><span class="insert">+</span>  callback(helloWorld)</span>
+<span class="line insert"><span class="insert">+</span>}</span>
+<span class="line insert"><span class="insert">+</span></span>
+ async <span class="keyword">function</span> <span class="function">getMessage</span>(helloWorld) {
+   const message = await helloWorld.methods.message().call()
+   console.log(<span class="error">`</span>Message: <span class="predefined">$</span>{message}<span class="error">`</span>)
+<span class="change"><span class="change">@@</span> -28,6 +36,7 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">afterConnect</span>() {
+   const accounts = await web3.eth.getAccounts()
+   const helloWorld = await deploy(accounts)
+   await getMessage(helloWorld)
+<span class="line insert"><span class="insert">+</span>  setMessage(helloWorld, <span class="string"><span class="delimiter">'</span><span class="content">Hello Paulo Jeronimo!</span><span class="delimiter">'</span></span>, accounts, getMessage)</span>
+ }
+ 
+ web3.eth.net.isListening()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Restart <code>ganache</code>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s test and see the output until now:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node js/HelloWorldClient.js</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, note the output generated by the <code>ganache</code>.</p>
+</div>
+<div class="paragraph">
+<p>Note that each time we run this client we will create a new contract on
+the Blockchain.
+That&#8217;s not what the original program did.
+It offered the opportunity to change the message of an existing
+contract.
+So now let&#8217;s tweak the code for that.
+But first, commit your work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .
+$ git commit -m "Added 'js/HelloWorldClient.js' (almost finished)"</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="doing-the-final-adjustments">4.1.12. Doing the final adjustments</h4>
+<div class="sect4">
+<h5 id="looking-for-an-existing-contract-and-print-its-message">Looking for an existing contract and print its message</h5>
+<div class="paragraph">
+<p>Update the code according to this diff:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/HelloWorldClient.js b/js/HelloWorldClient.js</span>
+<span class="line comment">index 03657eb..a64c77d 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/HelloWorldClient.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/HelloWorldClient.js</span></span>
+<span class="change"><span class="change">@@</span> -34,6 +34,22 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">getMessage</span>(helloWorld) {
+ async <span class="keyword">function</span> <span class="function">afterConnect</span>() {
+   console.log(<span class="error">`</span>web3 is connected!<span class="error">\</span>nweb3.version: <span class="predefined">$</span>{web3.version}<span class="error">`</span>)
+   const accounts = await web3.eth.getAccounts()
+<span class="line insert"><span class="insert">+</span>  <span class="keyword">if</span> (process.argv.length &gt;= <span class="integer">3</span>) {</span>
+<span class="line insert"><span class="insert">+</span>    <span class="keyword">if</span> (process.argv.length == <span class="integer">3</span>) {</span>
+<span class="line insert"><span class="insert">+</span>      <span class="keyword">if</span> (process.argv[<span class="integer">2</span>].startsWith(<span class="string"><span class="delimiter">'</span><span class="content">0x</span><span class="delimiter">'</span></span>)) {</span>
+<span class="line insert"><span class="insert">+</span>        <span class="keyword">try</span> {</span>
+<span class="line insert"><span class="insert">+</span>          const address = process.argv[<span class="integer">2</span>]</span>
+<span class="line insert"><span class="insert">+</span>          console.log(<span class="error">`</span>Looking <span class="keyword">for</span> a HelloWorld contract at <span class="predefined">$</span>{address}<span class="error">`</span>)</span>
+<span class="line insert"><span class="insert">+</span>          await getMessage(<span class="keyword">new</span> web3.eth.Contract(abi, address))</span>
+<span class="line insert"><span class="insert">+</span>        } <span class="keyword">catch</span> (error) {</span>
+<span class="line insert"><span class="insert">+</span>          console.log(<span class="string"><span class="delimiter">'</span><span class="content">Contract not found!</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>        }</span>
+<span class="line insert"><span class="insert">+</span>      } <span class="keyword">else</span> {</span>
+<span class="line insert"><span class="insert">+</span>        console.log(<span class="string"><span class="delimiter">'</span><span class="content">the address does not seem to be valid!</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>      }</span>
+<span class="line insert"><span class="insert">+</span>    }</span>
+<span class="line insert"><span class="insert">+</span>    <span class="keyword">return</span></span>
+<span class="line insert"><span class="insert">+</span>  }</span>
+   const helloWorld = await deploy(accounts)
+   await getMessage(helloWorld)
+   setMessage(helloWorld, <span class="string"><span class="delimiter">'</span><span class="content">Hello Paulo Jeronimo!</span><span class="delimiter">'</span></span>, accounts, getMessage)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Test the code by passing an address for a deployed contract.
+If the contract is found at the given address, the program output will
+look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ address=0x2ed6e8350081e2f5bcf6acf343a56dc6044de14e
+
+$ node js/HelloWorldClient.js $address
+web3 is connected!
+web3.version: 1.7.3
+Looking for a HelloWorld contract at
+0x2ed6e8350081e2f5bcf6acf343a56dc6044de14e
+Message: Hello Paulo Jeronimo!</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the address is malformed the output should be this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ address=invalid
+
+$ node js/HelloWorldClient.js $address
+web3 is connected!
+web3.version: 1.7.3
+the address does not seem to be valid!</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the address seem valid but the contract not found,
+the output should be close to this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ address=0xaaaaabbbbbccccc
+
+$ node js/HelloWorldClient.js $address
+web3 is connected!
+web3.version: 1.7.3
+Looking for a HelloWorld contract at 0xaaaaabbbbbccccc
+Contract not found!</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Save your work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .
+$ git commit -m "Updated 'js/HelloWorldClient.js' to do a simple command line processing"</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="updating-the-message-for-an-existing-contract">Updating the message for an existing contract</h5>
+<div class="paragraph">
+<p>We need a more effective way to process the command line arguments.
+In addition to searching for an existing contract, we also want to
+update the message in it.</p>
+</div>
+<div class="paragraph">
+<p>So, we have to process two (2) command line options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>option1 &#8594; the <em>address</em></p>
+</li>
+<li>
+<p>option2 &#8594; the <em>message</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Also, like <a href="#running-final-code-1">we tested in beginning of this
+tutorial</a>, we have three (3) commands (+1 combination) that can use
+the options above:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#cmd1">[cmd1]</a> &#8594; <em>deploy</em>: with this command (which is the default) we can
+  specify a <em>message option</em> (to update the message in contract after
+its creation (<a href="#cmd4">[cmd4]</a>)).</p>
+</li>
+<li>
+<p><a href="#cmd2">[cmd2]</a> &#8594; <em>getMessage</em>: with this command the <em>address option</em> is
+required.</p>
+</li>
+<li>
+<p><a href="#cmd3">[cmd3]</a> &#8594; <em>setMessage</em>: with this command, the <em>address option</em> is
+required and, also, the <em>message option</em>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Parsing command line commands and options can be very complicated.
+We&#8217;ll start to meet the requirements above by writing the following
+code (in <code>js/processArgs.js</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript">const argv = process.argv.slice(<span class="integer">2</span>)
+const arg = (min, index) =&gt; argv.length &gt;= min ? argv[index] : <span class="predefined-constant">undefined</span>
+
+let command = <span class="string"><span class="delimiter">'</span><span class="content">deploy</span><span class="delimiter">'</span></span>
+let address = arg(<span class="integer">1</span>, <span class="integer">0</span>)
+let message = arg(<span class="integer">2</span>, <span class="integer">1</span>)
+let validationErrors = []
+
+<span class="keyword">if</span> (address &amp;&amp; !address.startsWith(<span class="string"><span class="delimiter">'</span><span class="content">0x</span><span class="delimiter">'</span></span>)) {
+  validationErrors.push(<span class="error">`</span>The address <span class="predefined">$</span>{address} is invalid!<span class="error">`</span>)
+}
+<span class="keyword">if</span> (message?.trim() === <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>) {
+  validationErrors.push(<span class="string"><span class="delimiter">'</span><span class="content">The message should be not empty!</span><span class="delimiter">'</span></span>)
+}
+
+<span class="keyword">if</span> (validationErrors.length &gt; <span class="integer">0</span>) {
+  validationErrors.forEach((error) =&gt; console.log(error))
+  process.exit(<span class="integer">1</span>)
+}
+
+module.exports = { command, address, message }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In order to use this module, we need to update <code>js/HelloWordClient.js</code>
+according to this diff:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/HelloWorldClient.js b/js/HelloWorldClient.js</span>
+<span class="line comment">index a64c77d..e948160 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/HelloWorldClient.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/HelloWorldClient.js</span></span>
+<span class="change"><span class="change">@@</span> -31,30 +31,27 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">getMessage</span>(helloWorld) {
+   console.log(<span class="error">`</span>Message: <span class="predefined">$</span>{message}<span class="error">`</span>)
+ }
+ 
+<span class="line delete"><span class="delete">-</span>async <span class="keyword">function</span> <span class="function">afterConnect</span>() {</span>
+<span class="line insert"><span class="insert">+</span>async <span class="keyword">function</span> <span class="function">afterConnect</span>(<span class="eyecatcher">{ command, address, message }</span>) {</span>
+   console.log(<span class="error">`</span>web3 is connected!<span class="error">\</span>nweb3.version: <span class="predefined">$</span>{web3.version}<span class="error">`</span>)
+   const accounts = await web3.eth.getAccounts()
+<span class="line delete"><span class="delete">-</span>  <span class="keyword">if</span> (process.argv.length &gt;= <span class="integer">3</span>) {</span>
+<span class="line delete"><span class="delete">-</span>    <span class="keyword">if</span> (process.argv.length == <span class="integer">3</span>) {</span>
+<span class="line delete"><span class="delete">-</span>      <span class="keyword">if</span> (process.argv[<span class="integer">2</span>].startsWith(<span class="string"><span class="delimiter">'</span><span class="content">0x</span><span class="delimiter">'</span></span>)) {</span>
+<span class="line delete"><span class="delete">-</span>        <span class="keyword">try</span> {</span>
+<span class="line delete"><span class="delete">-</span>          const address = process.argv[<span class="integer">2</span>]</span>
+<span class="line delete"><span class="delete">-</span>          console.log(<span class="error">`</span>Looking <span class="keyword">for</span> a HelloWorld contract at <span class="predefined">$</span>{address}<span class="error">`</span>)</span>
+<span class="line delete"><span class="delete">-</span>          await getMessage(<span class="keyword">new</span> web3.eth.Contract(abi, address))</span>
+<span class="line delete"><span class="delete">-</span>        } <span class="keyword">catch</span> (error) {</span>
+<span class="line delete"><span class="delete">-</span>          console.log(<span class="string"><span class="delimiter">'</span><span class="content">Contract not found!</span><span class="delimiter">'</span></span>)</span>
+<span class="line delete"><span class="delete">-</span>        }</span>
+<span class="line delete"><span class="delete">-</span>      } <span class="keyword">else</span> {</span>
+<span class="line delete"><span class="delete">-</span>        console.log(<span class="string"><span class="delimiter">'</span><span class="content">the address does not seem to be valid!</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>  console.log(<span class="error">`</span>command: <span class="predefined">$</span>{command}<span class="error">`</span>)</span>
+<span class="line insert"><span class="insert">+</span>  <span class="keyword">switch</span> (command) {</span>
+<span class="line insert"><span class="insert">+</span>    <span class="keyword">case</span> <span class="string"><span class="delimiter">'</span><span class="content">deploy</span><span class="delimiter">'</span></span>:</span>
+<span class="line insert"><span class="insert">+</span>      helloWorld = await deploy(accounts)</span>
+<span class="line insert"><span class="insert">+</span>      await getMessage(helloWorld)</span>
+<span class="line insert"><span class="insert">+</span>      <span class="keyword">if</span> (message) {</span>
+<span class="line insert"><span class="insert">+</span>        setMessage(helloWorld, message, accounts, getMessage)</span>
+       }
+<span class="line delete"><span class="delete">-</span>    }</span>
+<span class="line delete"><span class="delete">-</span>    <span class="keyword">return</span></span>
+<span class="line insert"><span class="insert">+</span>      <span class="keyword">break</span></span>
+<span class="line insert"><span class="insert">+</span>    <span class="keyword">case</span> <span class="string"><span class="delimiter">'</span><span class="content">getMessage</span><span class="delimiter">'</span></span>:</span>
+<span class="line insert"><span class="insert">+</span>      <span class="comment">// will get a message looking for a contract with an especified address</span></span>
+<span class="line insert"><span class="insert">+</span>      <span class="keyword">break</span></span>
+<span class="line insert"><span class="insert">+</span>    <span class="keyword">case</span> <span class="string"><span class="delimiter">'</span><span class="content">setMessage</span><span class="delimiter">'</span></span>:</span>
+<span class="line insert"><span class="insert">+</span>      <span class="comment">// will set a message in a specfic address using accounts[0]</span></span>
+<span class="line insert"><span class="insert">+</span>      <span class="keyword">break</span></span>
+   }
+<span class="line delete"><span class="delete">-</span>  const helloWorld = await deploy(accounts)</span>
+<span class="line delete"><span class="delete">-</span>  await getMessage(helloWorld)</span>
+<span class="line delete"><span class="delete">-</span>  setMessage(helloWorld, <span class="string"><span class="delimiter">'</span><span class="content">Hello Paulo Jeronimo!</span><span class="delimiter">'</span></span>, accounts, getMessage)</span>
+ }
+ 
+ web3.eth.net.isListening()
+<span class="line delete"><span class="delete">-</span>  .then(() =&gt; afterConnect())</span>
+<span class="line insert"><span class="insert">+</span>  .then(() =&gt; afterConnect(<span class="eyecatcher">require(<span class="string"><span class="delimiter">'</span><span class="content">./processArgs</span><span class="delimiter">'</span></span>)</span>))</span>
+   .<span class="keyword">catch</span>((error) =&gt; console.log(error))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Restart <code>ganache</code>.</p>
+</div>
+<div class="paragraph">
+<p>Start testing by typing the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ # Test 1:
+$ node js/HelloWorldClient.js
+
+$ # Test 2:
+$ address=invalid
+$ node js/HelloWorldClient.js $address
+
+$ # Test 3 ("valid" address and invalid message):
+$ address=0x000000000
+$ message='  '
+$ node js/HelloWorldClient.js $address "$message"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Comit your work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .
+$ git commit -m "Updated 'js/HelloWorldClient.js' to start the 'update message' feature"</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="adding-the-yargs-support">Adding the yargs support</h5>
+<div class="paragraph">
+<p>The code in the last session isn&#8217;t so flexible to process the command line.
+So, in order to gain this flexibility, we will use the <a href="http://yargs.js.org/">yargs</a> project.</p>
+</div>
+<div class="paragraph">
+<p>Add the <code>yargs</code> package:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ pnpm add yargs</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apply this patch to <code>js/processArgs.js</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/processArgs.js b/js/processArgs.js</span>
+<span class="line comment">index fe7946f..d81e1ef 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/processArgs.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/processArgs.js</span></span>
+<span class="line change"><span class="change">@@</span> -1,21 +1,45 <span class="change">@@</span></span>
+<span class="line delete"><span class="delete">-</span>const argv = process.argv.slice(<span class="integer">2</span>)</span>
+<span class="line delete"><span class="delete">-</span>const arg = (min, index) =&gt; argv.length &gt;= min ? argv[index] : <span class="predefined-constant">undefined</span></span>
+<span class="line insert"><span class="insert">+</span>const yargs = require(<span class="string"><span class="delimiter">'</span><span class="content">yargs</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>const argv = yargs</span>
+<span class="line insert"><span class="insert">+</span>  .command(<span class="string"><span class="delimiter">'</span><span class="content">$0</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Deploys a HelloWorld contract</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>  .command(<span class="string"><span class="delimiter">'</span><span class="content">setMessage</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Sets a message in a contract</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>  .command(<span class="string"><span class="delimiter">'</span><span class="content">getMessage</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Gets a message in a contract</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>  .option(<span class="string"><span class="delimiter">'</span><span class="content">address</span><span class="delimiter">'</span></span>, {</span>
+<span class="line insert"><span class="insert">+</span>      alias: <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>,</span>
+<span class="line insert"><span class="insert">+</span>      description: <span class="string"><span class="delimiter">'</span><span class="content">The HelloWorld contract address</span><span class="delimiter">'</span></span>,</span>
+<span class="line insert"><span class="insert">+</span>      type: <span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span></span>
+<span class="line insert"><span class="insert">+</span>  })</span>
+<span class="line insert"><span class="insert">+</span>  .option(<span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>, {</span>
+<span class="line insert"><span class="insert">+</span>      alias: <span class="string"><span class="delimiter">'</span><span class="content">m</span><span class="delimiter">'</span></span>,</span>
+<span class="line insert"><span class="insert">+</span>      description: <span class="string"><span class="delimiter">'</span><span class="content">The message to be configured in the HelloWorld contract</span><span class="delimiter">'</span></span>,</span>
+<span class="line insert"><span class="insert">+</span>      type: <span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span></span>
+<span class="line insert"><span class="insert">+</span>  })</span>
+<span class="line insert"><span class="insert">+</span>  .help()</span>
+<span class="line insert"><span class="insert">+</span>  .alias(<span class="string"><span class="delimiter">'</span><span class="content">help</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">h</span><span class="delimiter">'</span></span>).argv;</span>
+ 
+ let command = <span class="string"><span class="delimiter">'</span><span class="content">deploy</span><span class="delimiter">'</span></span>
+<span class="line delete"><span class="delete">-</span>let address = arg<span class="eyecatcher">(<span class="integer">1</span>, <span class="integer">0</span>)</span></span>
+<span class="line delete"><span class="delete">-</span>let message = arg<span class="eyecatcher">(<span class="integer">2</span>, <span class="integer">1</span>)</span></span>
+<span class="line delete"><span class="delete">-</span>let <span class="eyecatcher">validationE</span>rrors = []</span>
+<span class="line insert"><span class="insert">+</span>let address = arg<span class="eyecatcher">v.address</span></span>
+<span class="line insert"><span class="insert">+</span>let message = arg<span class="eyecatcher">v.message</span></span>
+<span class="line insert"><span class="insert">+</span>let <span class="eyecatcher">e</span>rrors = []</span>
+ 
+<span class="line delete"><span class="delete">-</span><span class="eyecatcher"><span class="keyword">if</span> (address &amp;&amp; !address.startsWith(<span class="string"><span class="delimiter">'</span><span class="content">0x</span><span class="delimiter">'</span></span>)) {</span></span>
+<span class="line delete"><span class="delete">-</span>  <span class="eyecatcher">validationErrors.push(<span class="error">`</span>The address <span class="predefined">$</span>{address} is invalid</span>!<span class="error">`</span>)</span>
+<span class="line delete"><span class="delete">-</span><span class="eyecatcher">}</span></span>
+<span class="line delete"><span class="delete">-</span><span class="eyecatcher"><span class="keyword">if</span> (message?.trim() === <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>) {</span></span>
+<span class="line delete"><span class="delete">-</span>  <span class="eyecatcher">validationErrors.push(<span class="string"><span class="delimiter">'</span><span class="content">The message should be not empty!</span><span class="delimiter">'</span></span></span>)</span>
+<span class="line insert"><span class="insert">+</span><span class="eyecatcher">const errorIfEmpty = (option, value) =&gt; value === <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span> &amp;&amp;</span></span>
+<span class="line insert"><span class="insert">+</span>  <span class="eyecatcher">errors.push(<span class="error">`</span>The <span class="string"><span class="delimiter">&quot;</span><span class="content">${option}</span><span class="delimiter">&quot;</span></span> option should not be empty</span>!<span class="error">`</span>)</span>
+<span class="line insert"><span class="insert">+</span><span class="eyecatcher">const errorIfUndefinedOrEmpty = (option, value) =&gt; {</span></span>
+<span class="line insert"><span class="insert">+</span><span class="eyecatcher">  value === <span class="predefined-constant">undefined</span> &amp;&amp; errors.push(<span class="error">`</span>Please, define the <span class="string"><span class="delimiter">&quot;</span><span class="content">${option}</span><span class="delimiter">&quot;</span></span> option!<span class="error">`</span>)</span></span>
+<span class="line insert"><span class="insert">+</span>  <span class="eyecatcher">errorIfEmpty(option, value</span>)</span>
+ }
+<span class="line insert"><span class="insert">+</span>const errorIfNotAddress = (address) =&gt;</span>
+<span class="line insert"><span class="insert">+</span>  (address &amp;&amp; address.startsWith(<span class="string"><span class="delimiter">'</span><span class="content">0x</span><span class="delimiter">'</span></span>)) ||</span>
+<span class="line insert"><span class="insert">+</span>  errors.push(<span class="error">`</span>The address <span class="string"><span class="delimiter">&quot;</span><span class="content">${address}</span><span class="delimiter">&quot;</span></span> is not valid!<span class="error">`</span>)</span>
+ 
+<span class="line delete"><span class="delete">-</span><span class="keyword">if</span> (validationErrors.length &gt; <span class="integer">0</span>) {</span>
+<span class="line delete"><span class="delete">-</span>  validationErrors.forEach((error) =&gt; console.log(error))</span>
+<span class="line delete"><span class="delete">-</span>  process.exit(<span class="integer">1</span>)</span>
+<span class="line insert"><span class="insert">+</span><span class="keyword">if</span> (argv._.includes(<span class="string"><span class="delimiter">'</span><span class="content">setMessage</span><span class="delimiter">'</span></span>)) {</span>
+<span class="line insert"><span class="insert">+</span>  command = <span class="string"><span class="delimiter">'</span><span class="content">setMessage</span><span class="delimiter">'</span></span></span>
+<span class="line insert"><span class="insert">+</span>  errorIfNotAddress(address)</span>
+<span class="line insert"><span class="insert">+</span>  errorIfUndefinedOrEmpty(<span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>, message)</span>
+<span class="line insert"><span class="insert">+</span>} <span class="keyword">else</span> <span class="keyword">if</span> (argv._.includes(<span class="string"><span class="delimiter">'</span><span class="content">getMessage</span><span class="delimiter">'</span></span>)) {</span>
+<span class="line insert"><span class="insert">+</span>  command = <span class="string"><span class="delimiter">'</span><span class="content">getMessage</span><span class="delimiter">'</span></span></span>
+<span class="line insert"><span class="insert">+</span>  errorIfNotAddress(address)</span>
+<span class="line insert"><span class="insert">+</span>} <span class="keyword">else</span> {</span>
+<span class="line insert"><span class="insert">+</span>  errorIfEmpty(<span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>, message)</span>
+ }
+ 
+<span class="line delete"><span class="delete">-</span>module.exports = { command, address, message }</span>
+<span class="line insert"><span class="insert">+</span>module.exports = { command, address, message<span class="eyecatcher">, errors</span> }</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, apply this patch to <code>js/HelloWorldClient.js</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/HelloWorldClient.js b/js/HelloWorldClient.js</span>
+<span class="line comment">index e948160..7abc7e6 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/HelloWorldClient.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/HelloWorldClient.js</span></span>
+<span class="change"><span class="change">@@</span> -44,14 +44,20 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">afterConnect</span>({ command, address, message }) {
+       }
+       <span class="keyword">break</span>
+     <span class="keyword">case</span> <span class="string"><span class="delimiter">'</span><span class="content">getMessage</span><span class="delimiter">'</span></span>:
+<span class="line delete"><span class="delete">-</span>      <span class="eyecatcher"><span class="comment">// will get a message looking for a contract with an especified address</span></span></span>
+<span class="line insert"><span class="insert">+</span>      <span class="eyecatcher">console.log(<span class="error">`</span>getMessageAt({<span class="key">address</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${address}</span><span class="delimiter">&quot;</span></span>})<span class="error">`</span>)</span></span>
+       <span class="keyword">break</span>
+     <span class="keyword">case</span> <span class="string"><span class="delimiter">'</span><span class="content">setMessage</span><span class="delimiter">'</span></span>:
+<span class="line delete"><span class="delete">-</span>      <span class="eyecatcher"><span class="comment">// will set a message in a specfic address using accounts[0]</span></span></span>
+<span class="line insert"><span class="insert">+</span>      <span class="eyecatcher">console.log(<span class="error">`</span>setMessageAt({<span class="key">address</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${address}</span><span class="delimiter">&quot;</span></span>, <span class="key">message</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${message}</span><span class="delimiter">&quot;</span></span>, <span class="key">account</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${accounts[0]}</span><span class="delimiter">&quot;</span></span>)<span class="error">`</span>)</span></span>
+       <span class="keyword">break</span>
+   }
+ }
+ 
+<span class="line insert"><span class="insert">+</span>const args = require(<span class="string"><span class="delimiter">'</span><span class="content">./processArgs</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span><span class="keyword">if</span> (args.errors.length &gt; <span class="integer">0</span>) {</span>
+<span class="line insert"><span class="insert">+</span>  args.errors.forEach((error) =&gt; console.log(error))</span>
+<span class="line insert"><span class="insert">+</span>  process.exit(<span class="integer">1</span>)</span>
+<span class="line insert"><span class="insert">+</span>}</span>
+<span class="line insert"><span class="insert">+</span></span>
+ web3.eth.net.isListening()
+<span class="line delete"><span class="delete">-</span>  .then(() =&gt; afterConnect(<span class="eyecatcher">require(<span class="string"><span class="delimiter">'</span><span class="content">./processArgs</span><span class="delimiter">'</span></span>)</span>))</span>
+<span class="line insert"><span class="insert">+</span>  .then(() =&gt; afterConnect(<span class="eyecatcher">args</span>))</span>
+   .<span class="keyword">catch</span>((error) =&gt; console.log(error))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stop <code>ganache</code>.</p>
+</div>
+<div class="paragraph">
+<p>Test the following command line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node js/HelloWorldClient.js --help</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All of the next command lines are INVALID (check the reason) and will
+force the application to terminate its execution! Test them!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ node js/HelloWorldClient.js -m
+
+$ node js/HelloWorldClient.js getMessage
+
+$ node js/HelloWorldClient.js getMessage -a
+
+$ node js/HelloWorldClient.js getMessage -a invalid
+
+$ node js/HelloWorldClient.js setMessage -a 0xvalid
+
+$ node js/HelloWorldClient.js setMessage -m -a 0xvalid</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Start <code>ganache</code>.</p>
+</div>
+<div class="paragraph">
+<p>Test the VALID commands: <a href="#cmd1">[cmd1]</a>, <a href="#cmd2">[cmd2]</a>, <a href="#cmd3">[cmd3]</a> and <a href="#cmd4">[cmd4]</a>.</p>
+</div>
+<div class="paragraph">
+<p>Note that, despite having valid calls, the <code>setMessage</code> and <code>getMessage</code>
+commands are still not working.
+We will implement them next.</p>
+</div>
+<div class="paragraph">
+<p>Commit your work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git add .
+$ git commit -m 'Added the yargs support'</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="implementing-the-functions-getmessageat-and-setmessageat">Implementing the functions <code>getMessageAt</code> and <code>setMessageAt</code></h5>
+<div id="final-code-1" class="paragraph">
+<p>Apply the following patch to <code>js/HelloWorldClient.js</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="diff"><span class="line comment">diff --git a/js/HelloWorldClient.js b/js/HelloWorldClient.js</span>
+<span class="line comment">index 7abc7e6..934e91e 100644</span>
+<span class="line head"><span class="head">--- </span><span class="filename">a/js/HelloWorldClient.js</span></span>
+<span class="line head"><span class="head">+++ </span><span class="filename">b/js/HelloWorldClient.js</span></span>
+<span class="change"><span class="change">@@</span> -29,6 +29,26 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">setMessage</span>(helloWorld, message, accounts, callback) {
+ async <span class="keyword">function</span> <span class="function">getMessage</span>(helloWorld) {
+   const message = await helloWorld.methods.message().call()
+   console.log(<span class="error">`</span>Message: <span class="predefined">$</span>{message}<span class="error">`</span>)
+<span class="line insert"><span class="insert">+</span>  <span class="keyword">return</span> helloWorld</span>
+<span class="line insert"><span class="insert">+</span>}</span>
+<span class="line insert"><span class="insert">+</span></span>
+<span class="line insert"><span class="insert">+</span>async <span class="keyword">function</span> <span class="function">getMessageAt</span>(address) {</span>
+<span class="line insert"><span class="insert">+</span>  let helloWorld = <span class="predefined-constant">null</span></span>
+<span class="line insert"><span class="insert">+</span>  <span class="keyword">try</span> {</span>
+<span class="line insert"><span class="insert">+</span>    console.log(<span class="error">`</span>Looking <span class="keyword">for</span> a HelloWorld contract at <span class="predefined">$</span>{address}<span class="error">`</span>)</span>
+<span class="line insert"><span class="insert">+</span>    helloWorld = await getMessage(<span class="keyword">new</span> web3.eth.Contract(abi, address))</span>
+<span class="line insert"><span class="insert">+</span>  } <span class="keyword">catch</span> (error) {</span>
+<span class="line insert"><span class="insert">+</span>    console.log(<span class="string"><span class="delimiter">'</span><span class="content">HelloWorld not found!</span><span class="delimiter">'</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>  }</span>
+<span class="line insert"><span class="insert">+</span>  <span class="keyword">return</span> helloWorld</span>
+<span class="line insert"><span class="insert">+</span>}</span>
+<span class="line insert"><span class="insert">+</span></span>
+<span class="line insert"><span class="insert">+</span>async <span class="keyword">function</span> <span class="function">setMessageAt</span>(address, message, accounts) {</span>
+<span class="line insert"><span class="insert">+</span>  console.log(<span class="error">`</span>Setting the message <span class="string"><span class="delimiter">&quot;</span><span class="content">${message}</span><span class="delimiter">&quot;</span></span> <span class="keyword">for</span> a HelloWorld contract<span class="string"><span class="delimiter">&quot;</span><span class="content">`)</span></span></span>
+<span class="line insert"><span class="insert">+</span><span class="string"><span class="content">  const helloWorld = await getMessageAt(address)</span></span></span>
+<span class="line insert"><span class="insert">+</span><span class="string"><span class="content">  if (helloWorld !== null) {</span></span></span>
+<span class="line insert"><span class="insert">+</span><span class="string"><span class="content">    await setMessage(helloWorld, message, accounts, getMessage)</span></span></span>
+<span class="line insert"><span class="insert">+</span><span class="string"><span class="content">  }</span></span></span>
+<span class="string"><span class="content"> }</span></span>
+<span class="string"><span class="content"> </span></span>
+<span class="string"><span class="content"> async function afterConnect({ command, address, message }) {</span></span>
+<span class="change"><span class="change">@@</span> -44,10 +64,10 <span class="change">@@</span></span> async <span class="keyword">function</span> <span class="function">afterConnect</span>({ command, address, message }) {
+       }
+       <span class="keyword">break</span>
+     <span class="keyword">case</span> <span class="string"><span class="delimiter">'</span><span class="content">getMessage</span><span class="delimiter">'</span></span>:
+<span class="line delete"><span class="delete">-</span>      <span class="eyecatcher">console.log(<span class="error">`</span>getMessageAt({<span class="key">address</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${address}</span><span class="delimiter">&quot;</span></span>})<span class="error">`</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>      <span class="eyecatcher">await getMessageAt(address</span>)</span>
+       <span class="keyword">break</span>
+     <span class="keyword">case</span> <span class="string"><span class="delimiter">'</span><span class="content">setMessage</span><span class="delimiter">'</span></span>:
+<span class="line delete"><span class="delete">-</span>      <span class="eyecatcher">console.log(<span class="error">`</span>setMessageAt({<span class="key">address</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${address}</span><span class="delimiter">&quot;</span></span>, <span class="key">message</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${message}</span><span class="delimiter">&quot;</span></span>, <span class="key">account</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">${accounts[0]}</span><span class="delimiter">&quot;</span></span>)<span class="error">`</span></span>)</span>
+<span class="line insert"><span class="insert">+</span>      <span class="eyecatcher">await setMessageAt(address, message, accounts</span>)</span>
+       <span class="keyword">break</span>
+   }
+ }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="#running-final-code-1">[running-final-code-1]</a> and test all the commands presented
+by this session.</p>
+</div>
+<div class="paragraph">
+<p>Commit your work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ git commit -am "Implemented the functions {get,set}MessagetAt in 'js/HelloWorldClient.js'"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Congratulations! 😀  We&#8217;re done with this session!</strong></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-trufflehdwallet-provider">4.2. Using <code>@truffle/hdwallet-provider</code></h3>
+<div class="paragraph">
+<p><strong><span class="red">Under development</span></strong>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deploy-to-rinkeby">4.3. Deploy to Rinkeby</h3>
+<div class="paragraph">
+<p><strong><span class="red">Under development</span></strong>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="accessing-the-contract-through-a-web-client">4.4. Accessing the contract through a web client</h3>
+<div class="paragraph">
+<p><strong><span class="red">Under development</span></strong>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hardhat-version">5. Hardhat version</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong><span class="red">Under development</span></strong>.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
